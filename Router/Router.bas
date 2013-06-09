@@ -64,7 +64,7 @@ interrupt:
 		endif 
 	loop while pinC.1 is 1  
 		
-	configurationMode = 0   'set back configuration flag to 0 for pssible reconfiguration
+	configurationMode = 0   'set back configuration flag to 0 for possible reconfiguration
 return
 
 
