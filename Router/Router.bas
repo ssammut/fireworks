@@ -20,7 +20,7 @@ init:
 	SetFreq em40
 	hsersetup HSBAUD, %10       'start the hardware serial port background recieve
 	hi2csetup i2cmaster, Address, i2cfast_16, i2cbyte
-	setint %00000010,%00000010 'c1 signal (can be set between c0-c7)
+	setint %00000010,%00000010 'activate interrupt on c1 signal (can be set between c0-c7)
 	slaveCount = 0
 
 
@@ -65,6 +65,7 @@ interrupt:
 	loop while pinC.1 is 1  
 		
 	configurationMode = 0   'set back configuration flag to 0 for possible reconfiguration
+	setint %00000010,%00000010 're-activate interrupt on pin C.1
 return
 
 
