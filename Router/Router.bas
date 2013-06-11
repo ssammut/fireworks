@@ -20,7 +20,7 @@ init:
 	SetFreq em40
 	hsersetup HSBAUD, %10       'start the hardware serial port background recieve
 	hi2csetup i2cmaster, Address, i2cfast_16, i2cbyte
-	setint %00000010,%00000010 'activate interrupt on c1 signal (can be set between c0-c7)
+	setint %00000010,%00000010,C 'activate interrupt on c1 signal (can be set between c0-c7)
 	slaveCount = 0
 
 
@@ -93,8 +93,3 @@ sendToSlave:
 		inc counter				   'increment counter
 	loop while counter < ShiftRegisterCount
 return
-
-
-
-
-
