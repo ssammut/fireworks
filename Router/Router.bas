@@ -18,13 +18,13 @@ symbol slaveCount = b28
 
 init: 
 	SetFreq em40
-	hsersetup HSBAUD, %10       'start the hardware serial port background recieve
+	hsersetup HSBAUD, %01       'start the hardware serial port background recieve
 	hi2csetup i2cmaster, Address, i2cfast_16, i2cbyte
 	setint %00000010,%00000010,C 'activate interrupt on c1 signal (can be set between c0-c7)
 	slaveCount = 0
 
 
-main:		
+main:
 	HserNewDiff = HserPtr - ptr	
 	
 	if HserNewDiff < 0 then
@@ -49,7 +49,7 @@ interrupt:
 			slaveCount = 0   'reset salve modules count
 			bptr = 28	     'set module address pointer back to 28
 			configurationMode = 1 'set configuration flag to 1 to stop resetting init variables
-			pulsout POLLSLAVES ,2 'send signal to slave modules to send back their address
+			pulsout POLLSLAVES ,65535 'send signal to slave modules to send back their address
 		endif
 		
 		HserNewDiff = HserPtr - ptr	
@@ -62,7 +62,7 @@ interrupt:
 			@bptrinc = @ptrinc   'get data salve address and put in peek/poke memory
 			inc slaveCount	   'increment slave count to keep record on the number of slave modules  
 		endif 
-	loop while pinC.1 is 1  
+	loop while pinC.1 is 1
 		
 	configurationMode = 0   'set back configuration flag to 0 for possible reconfiguration
 	setint %00000010,%00000010 're-activate interrupt on pin C.1
