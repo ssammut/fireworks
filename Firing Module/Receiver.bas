@@ -4,7 +4,7 @@ symbol HSBAUD=B9600_40       	'baud rate for high speed port
 symbol CLOCK = B.1 		'clock for all registers
 symbol LATCH = D.0		'latch for all registers
 symbol MASK = %01111111		'mask to determine next bit
-symbol Address = %10100000    'I2C address
+symbol Address = %10110000    'I2C address
 symbol ShiftRegisterCount = 8 'number of shift registers per picaxe
 symbol ScratchpadSize = 1023
 
@@ -32,7 +32,7 @@ symbol HserNewDiff = b9
 
 
 init: hi2csetup i2cslave, Address  'start the hardware serial port background recieve
-	hsersetup HSBAUD, %10
+	hsersetup HSBAUD, %01
 	setint %00100000,%00100000 'c5 signal (can be set between c0-c7)
 	SetFreq em40
 	Low LATCH
@@ -53,7 +53,10 @@ goto main
 
 'interrupt to send i2c slave address to router
 interrupt:
-	hserout 0,(Address)
+	hserout 0,(Address) 'send slave address to master
+	do
+		'do nothing while the interrupt is still active
+	loop while pinC.5 is 1
 	setint %00100000,%00100000 'c5 signal
 return
 
