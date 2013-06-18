@@ -1,7 +1,7 @@
 #PICAXE 40X2
 
 symbol HSBAUD=B9600_40       	'baud rate for high speed port
-symbol Address = %10100000    'I2C address
+symbol BroadcastAddress = %10100000    'I2C address
 symbol POLLSLAVES = C.5       'pin used to get i2c slave addresses
 symbol packetSize = 9		'packet size received by transmitter
 symbol ShiftRegisterCount = 8 'number of shift registers per picaxe
@@ -12,14 +12,14 @@ symbol configurationMode = bit0  'occupies space for b0
 symbol found = bit1 'occupies space for b0
 symbol counter  = b2
 symbol slaveAddress = b3
-symbol HserNewDiff = b9
-symbol slaveCount = b28
+symbol HserNewDiff = b4
+symbol slaveCount = b5
 
 
 init: 
 	SetFreq em40
 	hsersetup HSBAUD, %01       'start the hardware serial port background recieve
-	hi2csetup i2cmaster, Address, i2cfast_16, i2cbyte
+	hi2csetup i2cmaster, BroadcastAddress, i2cfast_16, i2cbyte
 	setint %00000010,%00000010,C 'activate interrupt on c1 signal (can be set between c0-c7)
 	slaveCount = 0
 
@@ -63,7 +63,7 @@ interrupt:
 			inc slaveCount	   'increment slave count to keep record on the number of slave modules  
 		endif 
 	loop while pinC.1 is 1
-		
+
 	configurationMode = 0   'set back configuration flag to 0 for possible reconfiguration
 	setint %00000010,%00000010 're-activate interrupt on pin C.1
 return
